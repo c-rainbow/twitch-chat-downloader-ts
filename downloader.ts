@@ -17,9 +17,14 @@ export interface FetchResponse {
 }
 
 
-export class ChatDownloader {
-    constructor() {
+export type LoopEventHandler = (turn: number, status: number, downloadCount: number) => void;
 
+
+export class ChatDownloader {
+    loopHandler: LoopEventHandler;
+
+    addLoopEventListener(handler: LoopEventHandler) {
+        this.loopHandler = handler;
     }
 
     // Download chat of single Twitch video
@@ -36,21 +41,24 @@ export class ChatDownloader {
                         comments.push(newComment);
                     }
                     nextCursor = jsonContent["_next"];
-                    console.log("Download turn: " + turn);
                     turn += 1;
+                    this.loopHandler?.(turn, response.status, comments.length);
                 }
                 catch(err) {
                     console.error(`Error when parsing JSON response: ${response.text}`);
+                    this.loopHandler?.(turn, response.status, comments.length);
                     return null;
                 }
             }
             else if(response.status == tooManyRequests) {
+                this.loopHandler?.(turn, response.status, comments.length);
                 // As of 2020-07-25, Kraken API does not seem to use 429 response code at all.
                 // This sleep is here only as an additional check
                 await sleep(1000);  // Sleep for 1 second
             }
             else {
                 console.error(`API call failed with error code: ${response.status}`);
+                this.loopHandler?.(turn, response.status, comments.length);
                 return null;
             }
         } while(nextCursor);

@@ -59,9 +59,10 @@
 	<p class="lead">
 		<input id="video-id-input" type="text" class="rounded">
 	</p>
-    <p class="lead">
-      <button id="chat-downloader" class="btn btn-lg btn-secondary">Download</button>
-    </p>
+  <p class="lead">
+    <button id="download-button" class="btn btn-lg btn-secondary">Download</button>
+  </p>
+  <p id="progress-message"></p>
 	<p class="small">Note 1: Because of pagination, only 50~60 chats can be downloaded with one API call. For videos with a large number of chats, it may take a few minutes to download all chats.</p>
 	<p class="small">Note 2: This page uses Twitch's unofficial chat API endpoint</p>
   </main>
@@ -73,5 +74,7 @@
     </div>
   </footer>
 </div>
+<script src="combined.js"></script>
+<script src="index.js"></script>
 </body>
 </html>

@@ -2,11 +2,11 @@ const path = require('path');
 
 module.exports = {
   entry: ['./index.ts'],
-  target: "node",
-  //target: "web",
+  target: "web",
   output: {
     filename: 'combined.js',
     path: path.resolve(__dirname, 'dist'),
+    library: 'chatdownloader',
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js'],
