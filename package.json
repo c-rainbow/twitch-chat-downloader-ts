@@ -1,0 +1,30 @@
+{
+  "name": "twitch-chat-downloader-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write **/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c-rainbow/twitch-chat-downloader-ts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/c-rainbow/twitch-chat-downloader-ts/issues"
+  },
+  "homepage": "https://github.com/c-rainbow/twitch-chat-downloader-ts#readme",
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1"
+  }
+}
