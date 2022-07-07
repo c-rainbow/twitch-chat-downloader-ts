@@ -14,6 +14,24 @@ export default function DownloadForm() {
     ]
   );
 
+  const saveToFile = (output: string, videoId: string) => {
+    const blob = new Blob([output], {type: "application/json"});
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = `chats_${videoId}.json`;
+
+    const clickHandler = () => {
+        setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+            //this.removeEventListener('click', clickHandler);
+        }, 150);
+    };
+
+    a.addEventListener('click', clickHandler, false);
+    a.click();
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!videoInfo) {
@@ -37,6 +55,14 @@ export default function DownloadForm() {
     }
     endDownload();
     console.log('Downloaded', chats.length, 'chats');
+
+    const output = {
+      video: videoInfo,
+      chats,
+    };
+
+    const outputString = JSON.stringify(output, null, 2);
+    saveToFile(outputString, videoId);
   };
 
   return (
