@@ -2,16 +2,18 @@ import { FormEvent, useState } from 'react';
 import { TWITCH_CLIENT_ID } from './lib/constants';
 import { getVideoInfo } from './lib/search';
 import { getVideoId } from './lib/stringutils';
+import { VodInfo } from './lib/types';
 
 
 type PropType = {
-  setVideoInfo: (videoInfo: any) => void;
+  setVideoInfo: (videoInfo: VodInfo | null) => void;
+  searchError: string;
+  setSearchError: (error: string) => void;
 }
 
 
-export default function VodSearchForm({ setVideoInfo }: PropType) {
+export default function VodSearchForm({ setVideoInfo, searchError, setSearchError }: PropType) {
   const [vodIdOrUrl, setVodIdOrUrl] = useState<string>('');
-  const [error, setError] = useState<string>('');
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -22,17 +24,20 @@ export default function VodSearchForm({ setVideoInfo }: PropType) {
     const videoId = getVideoId(vodIdOrUrl);
     console.log('videoId:', videoId);
     if (!videoId) {
-      setError(`"${vodIdOrUrl}" is not a valid video ID or URL.`);
+      setSearchError(`"${vodIdOrUrl}" is not a valid video ID or URL.`);
+      setVideoInfo(null);
       return;
     }
 
-    const videoInfo = await getVideoInfo(videoId, TWITCH_CLIENT_ID);
-    if (!videoInfo) {
-      setError(`Cannot find a video with ID "${videoId}".`);
+    const { status, content } = await getVideoInfo(videoId, TWITCH_CLIENT_ID);
+    if (!content) {
+      setSearchError(`Cannot find a video with ID "${videoId}".`);
+      setVideoInfo(null);
       return;
     }
 
-    setVideoInfo(videoInfo);
+    setSearchError('');
+    setVideoInfo(content);
   };
 
   return (
@@ -63,9 +68,9 @@ export default function VodSearchForm({ setVideoInfo }: PropType) {
             </svg>
           </button>
         </div>
-        {error && (
+        {searchError && (
           <div className="ty-1 text-sm text-red-600">
-            {error}
+            {searchError}
           </div>
         )}
       </div>

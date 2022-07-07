@@ -1,8 +1,15 @@
 import { UNKNOWN_ERROR } from "./constants";
+import { VodInfo } from "./types";
+
+
+type VideoInfoResponse = {
+  status: number;
+  content?: VodInfo;
+}
 
 
 // Download chat of single Twitch video
-export async function getVideoInfo(videoId: string, clientId: string): Promise<any> {
+export async function getVideoInfo(videoId: string, clientId: string): Promise<VideoInfoResponse> {
   
   try {
     const url = `https://api.twitch.tv/v5/videos/${videoId}`;

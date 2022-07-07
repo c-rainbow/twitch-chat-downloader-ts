@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import DownloadForm from './DownloadForm';
+import { VodInfo } from './lib/types';
 import Progress from './Progress';
 import VodDetail from './VodDetail';
 import VodSearchForm from './VodSearchForm';
 
 export default function MainSection() {
-  const [videoInfo, setVideoInfo] = useState(null);
+  const [videoInfo, setVideoInfo] = useState<VodInfo | null>(null);
+  const [searchError, setSearchError] = useState<string>('');
 
   return (
     <div className="hero bg-base-200 pt-10">
@@ -18,7 +20,7 @@ export default function MainSection() {
             {' '}or{' '}
             <span className="italic font-medium">123456789</span>
           </p>
-          <VodSearchForm setVideoInfo={setVideoInfo} />
+          <VodSearchForm setVideoInfo={setVideoInfo} searchError={searchError} setSearchError={setSearchError} />
           {videoInfo && (
             <>
             <VodDetail vodInfo={videoInfo} />

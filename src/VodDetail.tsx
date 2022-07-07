@@ -1,41 +1,23 @@
 import { convertToTime, getFullUserName } from './lib/stringutils';
+import { VodInfo } from './lib/types';
 
 
 type PropType = {
-  vodInfo: {
-    content: {
-      streamer: string;
-      title: string;
-      created_at: string;
-      startTime: string;
-      length: number;
-      preview: {
-        small: string;
-        medium: string;
-        large: string;
-      };
-      channel: {
-        name: string;
-        display_name: string;
-      };
-    }
-  };
+  vodInfo: VodInfo
 }
 
 
 export default function VodDetail({ vodInfo }: PropType) {
 
-  const { content } = vodInfo;
-
-  if (!content) {  // Render nothing when content is not ready
+  if (!vodInfo) {  // Render nothing when content is not ready
     return <></>;
   }
-  const thumbnailSrc = content.preview?.medium;
-  const username = content.channel?.name;
-  const displayName = content.channel?.display_name;
+  const thumbnailSrc = vodInfo.preview?.medium;
+  const username = vodInfo.channel?.name;
+  const displayName = vodInfo.channel?.display_name;
   const channelName = getFullUserName(username, displayName);
 
-  const startTime = new Date(content.created_at);
+  const startTime = new Date(vodInfo.created_at);
   
   return (
     <div className="vod-detail mt-5">
@@ -50,12 +32,12 @@ export default function VodDetail({ vodInfo }: PropType) {
       <div className="mt-3 text-lg font-medium">Channel</div>
       <div>{channelName}</div>
       <div className="mt-3 text-lg font-medium">Title</div>
-      <div>{content.title}</div>
+      <div>{vodInfo.title}</div>
       <div className="mt-3 text-lg font-medium">Stream Start Time</div>
       <div>{startTime.toLocaleString()}</div>
       <div className="mt-3 text-lg font-medium">Length</div>
       <div>
-        {convertToTime(content.length)}
+        {convertToTime(vodInfo.length)}
       </div>
 
     </div>
