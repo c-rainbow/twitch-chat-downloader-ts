@@ -1,8 +1,38 @@
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
+import { TWITCH_CLIENT_ID } from './lib/constants';
+import { getVideoInfo } from './lib/search';
+import { getVideoId } from './lib/stringutils';
 
-export default function VodSearchForm() {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+
+type PropType = {
+  setVideoInfo: (videoInfo: any) => void;
+}
+
+
+export default function VodSearchForm({ setVideoInfo }: PropType) {
+  const [vodIdOrUrl, setVodIdOrUrl] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(e.target);
+    console.log(vodIdOrUrl);
+
+    const videoId = getVideoId(vodIdOrUrl);
+    console.log('videoId:', videoId);
+    if (!videoId) {
+      setError(`"${vodIdOrUrl}" is not a valid video ID or URL.`);
+      return;
+    }
+
+    const videoInfo = await getVideoInfo(videoId, TWITCH_CLIENT_ID);
+    if (!videoInfo) {
+      setError(`Cannot find a video with ID "${videoId}".`);
+      return;
+    }
+
+    setVideoInfo(videoInfo);
   };
 
   return (
@@ -12,6 +42,8 @@ export default function VodSearchForm() {
           <input
             type="text"
             placeholder="VOD ID here"
+            value={vodIdOrUrl}
+            onChange={e => setVodIdOrUrl(e.target.value)}
             className="input input-bordered w-72 focus:outline-none"
           />
           <button className="btn btn-square">
@@ -31,6 +63,11 @@ export default function VodSearchForm() {
             </svg>
           </button>
         </div>
+        {error && (
+          <div className="ty-1 text-sm text-red-600">
+            {error}
+          </div>
+        )}
       </div>
     </form>
   );

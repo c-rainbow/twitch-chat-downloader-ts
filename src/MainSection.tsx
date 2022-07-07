@@ -5,7 +5,7 @@ import VodDetail from './VodDetail';
 import VodSearchForm from './VodSearchForm';
 
 export default function MainSection() {
-  const [vodInfo, setVodInfo] = useState(null);
+  const [videoInfo, setVideoInfo] = useState(null);
 
   return (
     <div className="hero bg-base-200 pt-10">
@@ -18,10 +18,10 @@ export default function MainSection() {
             {' '}or{' '}
             <span className="italic font-medium">123456789</span>
           </p>
-          <VodSearchForm />
-          {vodInfo && (
+          <VodSearchForm setVideoInfo={setVideoInfo} />
+          {videoInfo && (
             <>
-            <VodDetail vodInfo={vodInfo} />
+            <VodDetail vodInfo={videoInfo} />
             <DownloadForm />
             <Progress currentSeconds={3990} totalSeconds={5936}/>
             </>
