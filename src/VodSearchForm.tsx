@@ -4,17 +4,18 @@ import { getVideoInfo } from './lib/search';
 import { getVideoId } from './lib/stringutils';
 import { VodInfo } from './lib/types';
 
-
 type PropType = {
   setVideoInfo: (videoInfo: VodInfo | null) => void;
   searchError: string;
   setSearchError: (error: string) => void;
-}
+};
 
-
-export default function VodSearchForm({ setVideoInfo, searchError, setSearchError }: PropType) {
+export default function VodSearchForm({
+  setVideoInfo,
+  searchError,
+  setSearchError,
+}: PropType) {
   const [vodIdOrUrl, setVodIdOrUrl] = useState<string>('');
-
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +49,7 @@ export default function VodSearchForm({ setVideoInfo, searchError, setSearchErro
             type="text"
             placeholder="VOD ID here"
             value={vodIdOrUrl}
-            onChange={e => setVodIdOrUrl(e.target.value)}
+            onChange={(e) => setVodIdOrUrl(e.target.value)}
             className="input input-bordered w-72 focus:outline-none"
           />
           <button className="btn btn-square">
@@ -69,9 +70,7 @@ export default function VodSearchForm({ setVideoInfo, searchError, setSearchErro
           </button>
         </div>
         {searchError && (
-          <div className="ty-1 text-sm text-red-600">
-            {searchError}
-          </div>
+          <div className="ty-1 text-sm text-red-600">{searchError}</div>
         )}
       </div>
     </form>

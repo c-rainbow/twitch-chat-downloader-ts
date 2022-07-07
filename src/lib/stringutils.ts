@@ -1,7 +1,4 @@
-
-
 const VIDEOS_KEY = '/videos/';
-
 
 export function getFullUserName(username: string, displayName: string) {
   if (!displayName) {
@@ -14,20 +11,20 @@ export function getFullUserName(username: string, displayName: string) {
   return `${displayName}(${username})`;
 }
 
-
 export function convertToTime(timeInSeconds: number): string {
   let intTime = Math.floor(timeInSeconds);
   const seconds = intTime % 60;
   intTime = Math.floor(intTime / 60);
   const minutes = intTime % 60;
   intTime = Math.floor(intTime / 60);
-  return `${intTime}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  return `${intTime}:${minutes.toString().padStart(2, '0')}:${seconds
+    .toString()
+    .padStart(2, '0')}`;
 }
-
 
 export function getVideoId(videoIdOrUrl: string): string | null {
   if (!videoIdOrUrl) {
-    console.log('empty video ID or url')
+    console.log('empty video ID or url');
     return null;
   }
   let input = videoIdOrUrl.trim();
@@ -35,10 +32,9 @@ export function getVideoId(videoIdOrUrl: string): string | null {
     console.log('input matches');
     return input;
   }
-  console.log('didnt match numbers', input)
+  console.log('didnt match numbers', input);
   return getVideoIdFromUrl(input);
 }
-
 
 // Input should be a form of https://(www.)?twitch.tv/videos/{videoId}
 export function getVideoIdFromUrl(url: string): string | null {

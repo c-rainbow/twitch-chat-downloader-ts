@@ -1,4 +1,3 @@
-
 const TOO_MANY_REQUESTS = 429; // HTTP 429 too many requests response code
 const ALL_COMMENTS_DOWNLOADED = 404;
 const INTERNAL_ERROR = 500;

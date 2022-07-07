@@ -1,16 +1,15 @@
-import { convertToTime } from "./lib/stringutils";
-
+import { convertToTime } from './lib/stringutils';
 
 type PropType = {
   currentSeconds: number;
   totalSeconds: number;
-}
-
+};
 
 export default function Progress(props: PropType) {
   const { currentSeconds, totalSeconds } = props;
 
-  const currentProgress = totalSeconds === 0 ? 0 : currentSeconds / totalSeconds;
+  const currentProgress =
+    totalSeconds === 0 ? 0 : currentSeconds / totalSeconds;
   const currentTime = convertToTime(currentSeconds);
   const totalTime = convertToTime(totalSeconds);
   return (
@@ -20,7 +19,10 @@ export default function Progress(props: PropType) {
         value={currentSeconds}
         max={totalSeconds}
       />
-      <div>Progress: {Math.floor(currentProgress * 100)}% ({currentTime}/{totalTime})</div>
+      <div>
+        Progress: {Math.floor(currentProgress * 100)}% ({currentTime}/
+        {totalTime})
+      </div>
     </>
   );
 }

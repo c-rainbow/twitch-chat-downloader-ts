@@ -1,15 +1,13 @@
 import { convertToTime, getFullUserName } from './lib/stringutils';
 import { VodInfo } from './lib/types';
 
-
 type PropType = {
-  vodInfo: VodInfo
-}
-
+  vodInfo: VodInfo;
+};
 
 export default function VodDetail({ vodInfo }: PropType) {
-
-  if (!vodInfo) {  // Render nothing when content is not ready
+  if (!vodInfo) {
+    // Render nothing when content is not ready
     return <></>;
   }
   const thumbnailSrc = vodInfo.preview?.medium;
@@ -18,16 +16,11 @@ export default function VodDetail({ vodInfo }: PropType) {
   const channelName = getFullUserName(username, displayName);
 
   const startTime = new Date(vodInfo.created_at);
-  
+
   return (
     <div className="vod-detail mt-5">
       <div className="flex justify-center">
-        {thumbnailSrc && (
-          <img
-            src={thumbnailSrc}
-            width="320px"
-          />
-        )}
+        {thumbnailSrc && <img src={thumbnailSrc} width="320px" />}
       </div>
       <div className="mt-3 text-lg font-medium">Channel</div>
       <div>{channelName}</div>
@@ -36,10 +29,7 @@ export default function VodDetail({ vodInfo }: PropType) {
       <div className="mt-3 text-lg font-medium">Stream Start Time</div>
       <div>{startTime.toLocaleString()}</div>
       <div className="mt-3 text-lg font-medium">Length</div>
-      <div>
-        {convertToTime(vodInfo.length)}
-      </div>
-
+      <div>{convertToTime(vodInfo.length)}</div>
     </div>
   );
 }

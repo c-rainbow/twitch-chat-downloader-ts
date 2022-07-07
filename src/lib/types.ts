@@ -1,5 +1,3 @@
-
-
 export type VodInfo = {
   streamer: string;
   title: string;
@@ -15,4 +13,4 @@ export type VodInfo = {
     name: string;
     display_name: string;
   };
-}
+};
