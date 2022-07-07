@@ -1,13 +1,19 @@
-import { useState } from 'react';
 import DownloadForm from './DownloadForm';
-import { VodInfo } from './lib/types';
+import { DownloadStatus } from './lib/types';
 import Progress from './Progress';
 import VodDetail from './VodDetail';
 import VodSearchForm from './VodSearchForm';
+import { useStore } from './lib/states';
 
 export default function MainSection() {
-  const [videoInfo, setVideoInfo] = useState<VodInfo | null>(null);
-  const [searchError, setSearchError] = useState<string>('');
+  const [videoInfo, searchError, lastChatOffset, downloadStatus] = useStore(
+    (state) => [
+      state.videoInfo,
+      state.searchError,
+      state.lastChatOffset,
+      state.downloadStatus,
+    ]
+  );
 
   return (
     <div className="hero bg-base-200 pt-10">
@@ -24,17 +30,19 @@ export default function MainSection() {
             </span>{' '}
             or <span className="italic font-medium">123456789</span>
           </p>
-          <VodSearchForm
-            setVideoInfo={setVideoInfo}
-            searchError={searchError}
-            setSearchError={setSearchError}
-          />
+          <VodSearchForm />
           {videoInfo && (
             <>
               <VodDetail vodInfo={videoInfo} />
               <DownloadForm />
-              <Progress currentSeconds={3990} totalSeconds={5936} />
             </>
+          )}
+          {downloadStatus !== DownloadStatus.NOT_STARTED && (
+            <Progress
+              lastChatOffset={lastChatOffset}
+              totalSeconds={videoInfo?.length || 0}
+              downloadStatus={downloadStatus}
+            />
           )}
         </div>
       </div>

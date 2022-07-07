@@ -86,6 +86,11 @@ export class ChatDownloader {
       }
 
       this._totalDownload += content.comments.length;
+      for (const comment of content.comments) {
+        if (this._lastChatOffset < comment.content_offset_seconds) {
+          this._lastChatOffset = comment.content_offset_seconds;
+        }
+      }
 
       return {
         turn: this._turn,

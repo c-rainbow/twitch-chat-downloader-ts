@@ -1,4 +1,5 @@
 export type VodInfo = {
+  _id: string;
   streamer: string;
   title: string;
   created_at: string;
@@ -14,3 +15,9 @@ export type VodInfo = {
     display_name: string;
   };
 };
+
+export enum DownloadStatus {
+  NOT_STARTED,
+  DOWNLOADING,
+  ENDED,
+}
