@@ -20,6 +20,7 @@ export class JsonFileSaver {
 
   constructor(vodInfo: VodInfo) {
     const filename = `chat_${vodInfo._id}.json`;
+    streamSaver.mitm = process.env.PUBLIC_URL + '/mitm.html';
     const fileStream = streamSaver.createWriteStream(filename);
     this._writer = fileStream.getWriter();
     this._vodInfo = vodInfo;
