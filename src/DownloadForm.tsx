@@ -1,57 +1,54 @@
 import { FormEvent, useState } from 'react';
 import { TWITCH_CLIENT_ID } from './lib/constants';
 import { ChatDownloader } from './lib/downloader';
+import { JsonFileSaver } from './lib/filesaver';
 import { useStore } from './lib/states';
-import { DownloadStatus } from './lib/types';
-
-
-enum FileType {
-  TEXT = 'text',
-  JSON = 'json',
-}
-
+import { DownloadStatus, FileType } from './lib/types';
 
 const saveToFile = (output: string, videoId: string) => {
-  const blob = new Blob([output], {type: "application/json"});
+  const blob = new Blob([output], { type: 'application/json' });
   const blobUrl = URL.createObjectURL(blob);
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = blobUrl;
   a.download = `chats_${videoId}.json`;
 
   const clickHandler = () => {
-      setTimeout(() => {
-          URL.revokeObjectURL(blobUrl);
-          //this.removeEventListener('click', clickHandler);
-      }, 150);
+    setTimeout(() => {
+      URL.revokeObjectURL(blobUrl);
+      //this.removeEventListener('click', clickHandler);
+    }, 150);
   };
 
   a.addEventListener('click', clickHandler, false);
   a.click();
 };
 
-
 export default function DownloadForm() {
-  const [videoInfo, setLastChatOffset, startDownload, endDownload, downloadStatus] = useStore(
-    (state) => [
-      state.videoInfo,
-      state.setLastChatOffset,
-      state.startDownload,
-      state.endDownload,
-      state.downloadStatus,
-    ]
-  );
+  const [
+    videoInfo,
+    setLastChatOffset,
+    startDownload,
+    endDownload,
+    downloadStatus,
+  ] = useStore((state) => [
+    state.videoInfo,
+    state.setLastChatOffset,
+    state.startDownload,
+    state.endDownload,
+    state.downloadStatus,
+  ]);
 
   const [fileFormat, setFileFormat] = useState<FileType>(FileType.TEXT);
-  const [stopped, setStopped] = useState<boolean>(false);
+  const [stoppedManually, setStoppedManually] = useState<boolean>(false);
 
   const handleFormatChange = (e: any) => {
     console.log('value:', e.target.value);
     setFileFormat(e.target.value);
-  }
+  };
 
   const cancelDownload = () => {
-    setStopped(true);
-  }
+    setStoppedManually(true);
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,23 +62,29 @@ export default function DownloadForm() {
     console.log('Download starts with video', videoId);
 
     const downloader = new ChatDownloader(videoId, TWITCH_CLIENT_ID);
-    const chats = [];
+    const filesaver = new JsonFileSaver(videoInfo);
+    //const chats = [];
     let ended = false;
     startDownload();
-    while (!ended && !stopped) {
+    await filesaver.start();
+    while (!ended && !stoppedManually) {
       const batchResult = await downloader.downloadNextBatch();
-      console.log('offset', batchResult.lastChatOffset);
-      chats.push(...batchResult.comments);
+      // console.log('offset', batchResult.lastChatOffset);
+      //chats.push(...batchResult.comments);
       setLastChatOffset(batchResult.lastChatOffset);
       ended = batchResult.ended;
+      await filesaver.addChats(batchResult.comments);
+      console.log('Saved comments');
     }
     endDownload();
-    console.log('Downloaded', chats.length, 'chats');
+    await filesaver.finalize();
+    //console.log('Downloaded', chats.length, 'chats');
 
-    if (stopped) {
+    if (stoppedManually) {
       return;
     }
 
+    /*
     const output = {
       video: videoInfo,
       chats,
@@ -89,6 +92,7 @@ export default function DownloadForm() {
 
     const outputString = JSON.stringify(output, null, 2);
     saveToFile(outputString, videoId);
+    */
   };
 
   return (

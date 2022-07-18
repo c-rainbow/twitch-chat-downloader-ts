@@ -1,3 +1,8 @@
+export enum FileType {
+  TEXT = 'text',
+  JSON = 'json',
+}
+
 export type VodInfo = {
   _id: string;
   streamer: string;
